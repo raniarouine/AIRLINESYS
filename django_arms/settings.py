@@ -57,7 +57,10 @@ ROOT_URLCONF = 'django_arms.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        import os
+
+        'DIRS': [os.path.join(BASE_DIR, 'armsApp', 'templates')],
+    
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -83,7 +86,6 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-
 
 
 # Password validation

@@ -1,17 +1,20 @@
-version: '3.9'
+version: '3.8'
 
 services:
-  web:
-    build:
-      context: .
-      dockerfile: Dockerfile
+  django-app:
+    image: app-django:latest  # Utilisation de l'image app-django:latest
     container_name: django-app
-    command: python manage.py runserver 0.0.0.0:8000
-    volumes:
-      - .:/app
     ports:
-      - "8005:8000"
+      - "8011:8000"
+    volumes:
+      - ./static:/app/static
+      - ./media:/app/media
+      - ./data/db.sqlite3:/app/db.sqlite3  # Assurez-vous que le chemin correspond à celui du Dockerfile
     environment:
-      - DEBUG=1
-      - SECRET_KEY=changeme
-      - DJANGO_ALLOWED_HOSTS=localhost 127.0.0.1 [::1]
+      - DEBUG=True
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge

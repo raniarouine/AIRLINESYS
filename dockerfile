@@ -1,20 +1,25 @@
-# Utiliser une image officielle Python
+# 1. Image de base
 FROM python:3.11-slim
 
-# Définir un dossier de travail
+# 2. Répertoire de travail dans le conteneur
 WORKDIR /app
 
-# Copier seulement requirements.txt d'abord
+# 3. Copier les dépendances
 COPY requirements.txt .
 
-# Installer les dépendances
+# 4. Installer les dépendances Python
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copier tout sauf venv/
-COPY . .
+# 5. Copier les fichiers de ton projet
+COPY manage.py .
+COPY data/db.sqlite3 .
+COPY django_arms/ ./django_arms/
+COPY armsApp/ ./armsApp/
+COPY static/ ./static/
+COPY media/ ./media/
 
-# Exposer le port
+# 6. Exposer le port utilisé par Django
 EXPOSE 8000
 
-# Lancer le serveur Django
+# 7. Commande de lancement
 CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
