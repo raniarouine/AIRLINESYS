@@ -40,7 +40,7 @@ pipeline {
 		        sh '''
                     . venv/bin/activate
 
-                    ${tool 'sonar'}/bin/sonar
+                    ${tool 'sonar'}/bin/sonar-scanner
                 '''        
                  }                 
              }
