@@ -15,8 +15,8 @@ pipeline {
         stage('Préparer l\'environnement Python') {
             steps {
                 sh '''
-                    python3 -m venv ${VIRTUAL_ENV}
-                    . ${VIRTUAL_ENV}/bin/activate
+                    python3 -m venv venv
+                    . venv/bin/activate
                     pip install --upgrade pip
                     pip install -r requirements.txt
                 '''
@@ -26,46 +26,17 @@ pipeline {
         stage('Lancer les tests') {
             steps {
                 sh '''
-                    . ${VIRTUAL_ENV}/bin/activate
+                    . venv/bin/activate
+
                     python manage.py test
                 '''
             }
-        }
-
-        stage('Collecte des fichiers statiques') {
-            steps {
-                sh '''
-                    . ${VIRTUAL_ENV}/bin/activate
-                    python manage.py collectstatic --noinput
-                '''
-            }
-        }
-
-        stage('Build Docker') {
-            steps {
-                sh 'docker build -t airlynes-app .'
-            }
-        }
-
+        } 
+        
         stage('Fin') {
             steps {
-                echo '✅ Pipeline terminé avec succès !'
+                echo ' Pipeline terminé avec succès !'
             }
-        }
-    }
-
-    post {
-        always {
-            echo ' Nettoyage de l’environnement virtuel...'
-            sh 'rm -rf ${VIRTUAL_ENV}'
-        }
-
-        success {
-            echo ' Build réussi !'
-        }
-
-        failure {
-            echo ' Le pipeline a échoué. Vérifie les logs.'
         }
     }
 }
