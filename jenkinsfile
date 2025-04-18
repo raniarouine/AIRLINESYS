@@ -8,7 +8,7 @@ pipeline {
     stages {
         stage('Cloner le dépôt') {
             steps {
-                git 'https://github.com/raniarouine/AIRLINESYS.git'
+                git branch: 'main', url: 'https://github.com/raniarouine/AIRLINESYS.git'
             }
         }
 
@@ -34,7 +34,7 @@ pipeline {
 
         stage('Fin') {
             steps {
-                echo ' Pipeline terminé !'
+                echo '✅ Pipeline terminé avec succès !'
             }
         }
     }
