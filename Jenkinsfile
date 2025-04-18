@@ -32,7 +32,44 @@ pipeline {
                 '''
             }
         }
+        
+        stage('Collecte des fichiers statiques') {
+            steps {
+                sh '''
+                    . ${VIRTUAL_ENV}/bin/activate
+                    python manage.py collectstatic --noinput
+                '''
+            }
+        }
 
+        stage('Build Docker') {
+            steps {
+                sh 'docker build -t airlynes-app .'
+            }
+        }
+
+        stage('Fin') {
+            steps {
+                echo '✅ Pipeline terminé avec succès !'
+            }
+        }
+    }
+
+    post {
+        always {
+            echo 'Nettoyage de l’environnement virtuel...'
+            sh 'rm -rf ${VIRTUAL_ENV}'
+        }
+
+        success {
+            echo 'Build réussi !'
+        }
+
+        failure {
+            echo ' Le pipeline a échoué. Vérifie les logs.'
+        }
+    }
+}
         stage('Fin') {
             steps {
                 echo ' Pipeline terminé avec succès !'
