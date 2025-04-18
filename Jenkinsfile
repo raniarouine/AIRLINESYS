@@ -37,7 +37,7 @@ pipeline {
            
              withSonarQubeEnv(credentialsId: 'sonar',installationName: 'sonar') {
 
-		sh 'mvn sonar:sonar -Dsonar.projectKey=test '         
+		        sh ' sonar-scanner  '        
                  }                 
              }
         }
