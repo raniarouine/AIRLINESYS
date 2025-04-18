@@ -37,11 +37,11 @@ pipeline {
            
              withSonarQubeEnv(credentialsId: 'sonar',installationName: 'sonar') {
 
-		        sh '''
+		        sh """
                     . venv/bin/activate
 
                     ${tool 'sonar'}/bin/sonar-scanner
-                '''        
+                """       
                  }                 
              }
         }
