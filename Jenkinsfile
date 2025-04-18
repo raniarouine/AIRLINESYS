@@ -15,8 +15,8 @@ pipeline {
         stage('Préparer l\'environnement Python') {
             steps {
                 sh '''
-                    python3 -m venv venv
-                    . venv/bin/activate
+                    python3 -m venv ${VIRTUAL_ENV}
+                    . ${VIRTUAL_ENV}/bin/activate
                     pip install --upgrade pip
                     pip install -r requirements.txt
                 '''
@@ -26,13 +26,12 @@ pipeline {
         stage('Lancer les tests') {
             steps {
                 sh '''
-                    . venv/bin/activate
-
+                    . ${VIRTUAL_ENV}/bin/activate
                     python manage.py test
                 '''
             }
         }
-        
+
         stage('Collecte des fichiers statiques') {
             steps {
                 sh '''
@@ -57,23 +56,16 @@ pipeline {
 
     post {
         always {
-            echo 'Nettoyage de l’environnement virtuel...'
+            echo ' Nettoyage de l’environnement virtuel...'
             sh 'rm -rf ${VIRTUAL_ENV}'
         }
 
         success {
-            echo 'Build réussi !'
+            echo ' Build réussi !'
         }
 
         failure {
             echo ' Le pipeline a échoué. Vérifie les logs.'
-        }
-    }
-}
-        stage('Fin') {
-            steps {
-                echo ' Pipeline terminé avec succès !'
-            }
         }
     }
 }
