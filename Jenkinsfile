@@ -37,7 +37,7 @@ pipeline {
            
              withSonarQubeEnv(credentialsId: 'sonar',installationName: 'sonar') {
 
-		        sh ' sonar-scanner  '        
+		        sh ' sonar '        
                  }                 
              }
         }
