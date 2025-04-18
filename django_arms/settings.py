@@ -57,7 +57,7 @@ ROOT_URLCONF = 'django_arms.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        import os
+        
 
         'DIRS': [os.path.join(BASE_DIR, 'armsApp', 'templates')],
     

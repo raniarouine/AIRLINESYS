@@ -2,6 +2,7 @@ version: '3.8'
 
 services:
   django-app:
+        
     image: app-django:latest  # Utilisation de l'image app-django:latest
     container_name: django-app
     ports:
