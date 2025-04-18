@@ -32,7 +32,15 @@ pipeline {
                 '''
             }
         } 
-        
+        stage("Quality code Test") {
+            steps {
+           
+             withSonarQubeEnv(credentialsId: 'sonar',installationName: 'sonar') {
+
+		sh 'mvn sonar:sonar -Dsonar.projectKey=test '         
+                 }                 
+             }
+        }
         stage('Fin') {
             steps {
                 echo ' Pipeline terminé avec succès !'
