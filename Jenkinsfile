@@ -46,7 +46,12 @@ pipeline {
              }
         }
         
-        
+        stage('build docker-iamge') {
+            steps {
+                sh 'docker build -t managepython:1.$BUILD_NUMBER .'
+          
+            }
+        }
         stage('Fin') {
             steps {
                 echo ' Pipeline terminé avec succès !'
