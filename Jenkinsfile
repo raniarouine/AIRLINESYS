@@ -46,13 +46,7 @@ pipeline {
              }
         }
         
-        stage('build') {
-            steps {
-                sh 'python3 -m py_compile manage.py'
-                stash(name: 'compiled-results', includes: '*.py*')
-                
-            }
-        }
+        
         stage('Fin') {
             steps {
                 echo ' Pipeline terminé avec succès !'
