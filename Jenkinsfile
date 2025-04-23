@@ -41,8 +41,8 @@ pipeline {
                    // . venv/bin/activate
 
                     //${tool 'sonar'}/bin/sonar-scanner
-                """       
-                 }                 
+                //"""       
+                // }                 
              }
         }
         
