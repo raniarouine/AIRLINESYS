@@ -5,19 +5,10 @@ FROM python:3.11-slim
 WORKDIR /app
 
 # 3. Copier les dépendances
-COPY requirements.txt .
-
-# 4. Installer les dépendances Python
-RUN pip install --no-cache-dir -r requirements.txt
 
 # 5. Copier les fichiers de ton projet
-COPY manage.py .
-COPY db.sqlite3 .
-COPY django_arms/ ./django_arms/
-COPY armsApp/ ./armsApp/
-COPY static/ ./static/
-COPY media/ ./media/
-
+COPY . . 
+RUN pip install --no-cache-dir -r requirements.txt
 # 6. Exposer le port utilisé par Django
 EXPOSE 8000
 
