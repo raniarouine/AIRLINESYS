@@ -35,12 +35,12 @@ pipeline {
         stage("Quality code Test") {
             steps {
            
-             withSonarQubeEnv(credentialsId: 'sonar',installationName: 'sonar') {
+             //withSonarQubeEnv(credentialsId: 'sonar',installationName: 'sonar') {
 
-		        sh """
-                    . venv/bin/activate
+		        //sh """
+                   // . venv/bin/activate
 
-                    ${tool 'sonar'}/bin/sonar-scanner
+                    //${tool 'sonar'}/bin/sonar-scanner
                 """       
                  }                 
              }
@@ -48,6 +48,7 @@ pipeline {
         
         stage('build docker-iamge') {
             steps {
+
                 sh 'docker build -t managepython:1.$BUILD_NUMBER .'
           
             }

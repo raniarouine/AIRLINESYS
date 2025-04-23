@@ -12,7 +12,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 # 5. Copier les fichiers de ton projet
 COPY manage.py .
-COPY data/db.sqlite3 .
+COPY db.sqlite3 .
 COPY django_arms/ ./django_arms/
 COPY armsApp/ ./armsApp/
 COPY static/ ./static/
