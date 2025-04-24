@@ -34,15 +34,15 @@ pipeline {
         } 
         stage("Quality code Test") {
             steps {
-           echo 'rania'
-             //withSonarQubeEnv(credentialsId: 'sonar',installationName: 'sonar') {
+           echo 'rania
+             withSonarQubeEnv(credentialsId: 'sonar',installationName: 'sonar') {
 
-		        //sh """
-                   // . venv/bin/activate
+		        sh """
+                    . venv/bin/activate
 
-                    //${tool 'sonar'}/bin/sonar-scanner
-                //"""       
-                // }                 
+                    ${tool 'sonar'}/bin/sonar-scanner
+                """       
+                 }                 
              }
         }
         
