@@ -34,7 +34,7 @@ pipeline {
         } 
         stage("Quality code Test") {
             steps {
-           echo 'rania
+           echo 'rania'
              withSonarQubeEnv(credentialsId: 'sonar',installationName: 'sonar') {
 
 		        sh """
