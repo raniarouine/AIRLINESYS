@@ -2,15 +2,15 @@ pipeline {
     agent any
 
     environment {
-        ZAP_HOME = '/opt/zaproxy'  // Chemin vers le répertoire d'installation de ZAP
-        ZAP_PORT = '8090'          // Le port où ZAP écoute
-        TARGET_URL = 'http://127.0.0.1:8000'  // URL de ton application à scanner
+        ZAP_HOME = '/opt/zaproxy'              // Chemin d'installation de ZAP
+        ZAP_PORT = '8090'                      // Port d'écoute de ZAP
+        TARGET_URL = 'http://127.0.0.1:8000'    // URL de ton app à scanner
+        ZAP_API_KEY = credentials('zap-api-key') // Clé API sécurisée depuis Jenkins Credentials
     }
 
     stages {
         stage('Cloner le dépôt') {
             steps {
-                // Spécifie explicitement la branche 'main' (ou une autre branche si nécessaire)
                 git branch: 'main', url: 'https://github.com/raniarouine/AIRLINESYS.git'
             }
         }
@@ -18,11 +18,23 @@ pipeline {
         stage('Démarrer ZAP') {
             steps {
                 script {
-                    // Lancer ZAP en mode daemon
                     sh """
-                        nohup ${ZAP_HOME}/zap.sh -daemon -port ${ZAP_PORT} -host 0.0.0.0 & 
-                        sleep 10  # Attendre que ZAP se lance correctement
+                        nohup ${ZAP_HOME}/zap.sh -daemon -port ${ZAP_PORT} -host 0.0.0.0 -config api.key=${ZAP_API_KEY} > zap.log 2>&1 &
+                        sleep 15  # Donne plus de temps pour démarrer
                     """
+                    
+                    // Vérifier que ZAP est bien démarré avant de continuer
+                    timeout(time: 1, unit: 'MINUTES') {
+                        waitUntil {
+                            script {
+                                def zapStatus = sh(
+                                    script: "curl -s http://localhost:${ZAP_PORT}/JSON/core/view/version/?apikey=${ZAP_API_KEY}",
+                                    returnStdout: true
+                                ).trim()
+                                return zapStatus.contains('version')
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -30,10 +42,30 @@ pipeline {
         stage('Scan de sécurité avec ZAP') {
             steps {
                 script {
-                    // Effectuer le scan de sécurité
                     sh """
-                        curl -X GET "http://localhost:${ZAP_PORT}/JSON/ascan/action/scan?url=${TARGET_URL}&maxChildren=5"
+                        echo "Démarrage du scan actif sur ${TARGET_URL}"
+                        curl -s "http://localhost:${ZAP_PORT}/JSON/ascan/action/scan/?url=${TARGET_URL}&apikey=${ZAP_API_KEY}&maxChildren=5"
                     """
+                }
+            }
+        }
+
+        stage('Attendre la fin du scan') {
+            steps {
+                script {
+                    // Boucle d'attente jusqu'à ce que le scan soit fini
+                    timeout(time: 10, unit: 'MINUTES') {
+                        waitUntil {
+                            script {
+                                def scanStatus = sh(
+                                    script: "curl -s http://localhost:${ZAP_PORT}/JSON/ascan/view/status/?apikey=${ZAP_API_KEY} | jq -r .status",
+                                    returnStdout: true
+                                ).trim()
+                                echo "Status du scan: ${scanStatus}%"
+                                return scanStatus == "100"
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -41,21 +73,21 @@ pipeline {
         stage('Récupérer et Archiver le Rapport ZAP') {
             steps {
                 script {
-                    // Télécharger le rapport en format HTML
                     sh """
-                        curl -o zap_report.html "http://localhost:${ZAP_PORT}/OTHER/core/other/htmlreport?formMethod=GET"
+                        echo "Téléchargement du rapport ZAP..."
+                        curl -s -o zap_report.html "http://localhost:${ZAP_PORT}/OTHER/core/other/htmlreport/?apikey=${ZAP_API_KEY}"
                     """
                 }
-                archiveArtifacts artifacts: 'zap_report.html', allowEmptyArchive: true
+                archiveArtifacts artifacts: 'zap_report.html', allowEmptyArchive: false
             }
         }
 
         stage('Nettoyage') {
             steps {
                 script {
-                    // Arrêter ZAP après le scan
                     sh """
-                        curl -X GET "http://localhost:${ZAP_PORT}/JSON/core/action/shutdown"
+                        echo "Arrêt de ZAP..."
+                        curl -s "http://localhost:${ZAP_PORT}/JSON/core/action/shutdown/?apikey=${ZAP_API_KEY}"
                     """
                 }
             }
