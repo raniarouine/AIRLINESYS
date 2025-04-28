@@ -10,7 +10,8 @@ pipeline {
     stages {
         stage('Cloner le dépôt') {
             steps {
-                git 'https://github.com/raniarouine/AIRLINESYS.git'
+                // Spécifie explicitement la branche 'main' (ou une autre branche si nécessaire)
+                git branch: 'main', url: 'https://github.com/raniarouine/AIRLINESYS.git'
             }
         }
 
