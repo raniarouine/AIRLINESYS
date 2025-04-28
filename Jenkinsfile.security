@@ -21,7 +21,7 @@ pipeline {
                     // Lancer ZAP en mode daemon
                     sh """
                         nohup ${ZAP_HOME}/zap.sh -daemon -port ${ZAP_PORT} -host 0.0.0.0 & 
-                        sleep 10  // Attendre que ZAP se lance
+                        sleep 10  # Attendre que ZAP se lance correctement
                     """
                 }
             }
