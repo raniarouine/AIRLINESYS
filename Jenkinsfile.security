@@ -1,0 +1,75 @@
+pipeline {
+    agent any
+
+    environment {
+        ZAP_HOME = '/opt/zaproxy'  // Chemin vers le répertoire d'installation de ZAP
+        ZAP_PORT = '8090'          // Le port où ZAP écoute
+        TARGET_URL = 'http://127.0.0.1:8000'  // URL de ton application à scanner
+    }
+
+    stages {
+        stage('Cloner le dépôt') {
+            steps {
+                git 'https://github.com/raniarouine/AIRLINESYS.git'
+            }
+        }
+
+        stage('Démarrer ZAP') {
+            steps {
+                script {
+                    // Lancer ZAP en mode daemon
+                    sh """
+                        nohup ${ZAP_HOME}/zap.sh -daemon -port ${ZAP_PORT} -host 0.0.0.0 & 
+                        sleep 10  // Attendre que ZAP se lance
+                    """
+                }
+            }
+        }
+
+        stage('Scan de sécurité avec ZAP') {
+            steps {
+                script {
+                    // Effectuer le scan de sécurité
+                    sh """
+                        curl -X GET "http://localhost:${ZAP_PORT}/JSON/ascan/action/scan?url=${TARGET_URL}&maxChildren=5"
+                    """
+                }
+            }
+        }
+
+        stage('Récupérer et Archiver le Rapport ZAP') {
+            steps {
+                script {
+                    // Télécharger le rapport en format HTML
+                    sh """
+                        curl -o zap_report.html "http://localhost:${ZAP_PORT}/OTHER/core/other/htmlreport?formMethod=GET"
+                    """
+                }
+                archiveArtifacts artifacts: 'zap_report.html', allowEmptyArchive: true
+            }
+        }
+
+        stage('Nettoyage') {
+            steps {
+                script {
+                    // Arrêter ZAP après le scan
+                    sh """
+                        curl -X GET "http://localhost:${ZAP_PORT}/JSON/core/action/shutdown"
+                    """
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+            echo 'Pipeline terminé !'
+        }
+        success {
+            echo 'Le scan de sécurité s\'est bien déroulé.'
+        }
+        failure {
+            echo 'Le scan a échoué, vérifier les logs.'
+        }
+    }
+}
