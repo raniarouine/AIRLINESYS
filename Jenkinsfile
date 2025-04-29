@@ -61,7 +61,7 @@ pipeline {
         }
         stage('run docker-container') {
             steps {
-                sh 'docker run -d --name managepython6_container managepython:1.$BUILD_NUMBER'
+                sh 'docker run -d --name managepython8_container managepython:1.$BUILD_NUMBER'
             }
         }
           stage('Docker Login') {
