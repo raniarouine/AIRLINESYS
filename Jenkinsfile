@@ -7,6 +7,8 @@ pipeline {
         NIKTO_IMAGE = 'frapsoft/nikto:latest'
         DOCKER_IMAGE_NAME = 'app-django'
         DEPLOY_DIR = '.'
+        IMAGE_NAME = "raniaiset/managepython"
+        IMAGE_TAG = "1.${BUILD_NUMBER}"
 
     }
 
@@ -60,7 +62,7 @@ pipeline {
         }
         stage('run docker-container') {
             steps {
-                sh 'docker run -d --name managepython2_container managepython:1.$BUILD_NUMBER'
+                sh 'docker run -d --name managepython3_container managepython:1.$BUILD_NUMBER'
             }
         }
           stage('Docker Login') {
@@ -73,7 +75,7 @@ pipeline {
 
         stage('Push Docker Image') {
             steps {
-                sh 'docker push $IMAGE_NAME:$IMAGE_TAG'
+                    sh 'docker push $IMAGE_NAME:$IMAGE_TAG'
             }
         }
 
