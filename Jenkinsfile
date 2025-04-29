@@ -58,6 +58,13 @@ pipeline {
           
             }
         }
+        stage('run docker-container') {
+            steps {
+                sh 'docker run -d --name managepython_container managepython:1.$BUILD_NUMBER'
+            }
+        }
+
+
            stage('Démarrer l\'application avec Docker Compose') {
             steps {
                 sh 'docker-compose up -d'
@@ -77,7 +84,7 @@ pipeline {
                 '''
             }
         }
-        
+
         stage('Fin') {
             steps {
                 echo ' Pipeline terminé avec succès !'
