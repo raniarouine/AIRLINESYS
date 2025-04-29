@@ -64,13 +64,7 @@ pipeline {
                 sh 'docker run -d --name managepython8_container managepython:1.$BUILD_NUMBER'
             }
         }
-          stage('Docker Login') {
-            steps {
-                withCredentials([usernamePassword(credentialsId: 'jenkins-token', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
-                    sh 'echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin'
-                }
-            }
-        }
+        
 
           stage('Tag Docker Image') {
             steps {
