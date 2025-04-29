@@ -63,7 +63,19 @@ pipeline {
                 sh 'docker run -d --name managepython_container managepython:1.$BUILD_NUMBER'
             }
         }
+          stage('Docker Login') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'jenkins-token', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                    sh 'echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin'
+                }
+            }
+        }
 
+        stage('Push Docker Image') {
+            steps {
+                sh 'docker push $IMAGE_NAME:$IMAGE_TAG'
+            }
+        }
 
            stage('Démarrer l\'application avec Docker Compose') {
             steps {
