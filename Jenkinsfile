@@ -73,6 +73,14 @@ pipeline {
             }
         }
 
+          stage('Tag Docker Image') {
+            steps {
+                 script {
+                       sh "docker tag managepython:1.${BUILD_NUMBER} raniaiset/managepython:1.${BUILD_NUMBER}"
+        }
+    }
+}
+
         stage('Push Docker Image') {
             steps {
                     sh 'docker push $IMAGE_NAME:$IMAGE_TAG'
