@@ -3,6 +3,11 @@ pipeline {
 
     environment {
         VIRTUAL_ENV = "${WORKSPACE}/venv"
+        TRIVY_IMAGE = 'aquasec/trivy:latest'
+        NIKTO_IMAGE = 'frapsoft/nikto:latest'
+        DOCKER_IMAGE_NAME = 'app-django'
+        DEPLOY_DIR = '.'
+
     }
 
     stages {
@@ -53,6 +58,26 @@ pipeline {
           
             }
         }
+           stage('Démarrer l\'application avec Docker Compose') {
+            steps {
+                sh 'docker-compose up -d'
+            }
+        }
+         stage('Scan de sécurité - Trivy') {
+            steps {
+                sh "docker run --rm ${TRIVY_IMAGE} image ${DOCKER_IMAGE_NAME}:latest"
+            }
+        }
+           stage('Scan de sécurité - Nikto') {
+            steps {
+                // Attendre quelques secondes que le conteneur soit prêt
+                sh '''
+                    sleep 10
+                    docker run --rm ${NIKTO_IMAGE} -host http://localhost:8011
+                '''
+            }
+        }
+        
         stage('Fin') {
             steps {
                 echo ' Pipeline terminé avec succès !'
