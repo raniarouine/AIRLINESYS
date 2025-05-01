@@ -61,7 +61,7 @@ pipeline {
         }
         stage('run docker-container') {
             steps {
-                sh 'docker run -d --name managepython8_container managepython:1.$BUILD_NUMBER'
+                sh 'docker run -d --name managepython9_container managepython:1.$BUILD_NUMBER'
             }
         }
         
@@ -85,11 +85,20 @@ pipeline {
         }
 
 
-        stage('Push Docker Image') {
-            steps {
-                    sh 'docker push $IMAGE_NAME:$IMAGE_TAG'
-            }
-        }
+        stage('Deploy our image') { 
+
+            steps { 
+               script{
+
+                  withDockerRegistry([credentialsId:"docker-hub", url:""]){
+                                      sh ' docker push raniaiset/managepython:1.$BUILD_NUMBER '
+                   
+                } 
+
+               }
+	    }   
+  
+}
 
            stage('Démarrer l\'application avec Docker Compose') {
             steps {
