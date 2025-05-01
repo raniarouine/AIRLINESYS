@@ -3,7 +3,7 @@ version: '3.8'
 services:
   django-app:
         
-    image: raniaiset/managepython # Utilisation de l'image app-django:latest
+    image: raniaiset/managepython:1.67 # Utilisation de l'image app-django:latest
     container_name: django-app
     ports:
       - "8011:8000"

@@ -98,7 +98,7 @@ pipeline {
                script{
 
                   withDockerRegistry([credentialsId:"docker-hub", url:""]){
-                       sh'docker-compose up -d'
+                       sh' docker-compose up -d '
 
                                     
                    
@@ -119,9 +119,6 @@ pipeline {
                 archiveArtifacts artifacts: 'zap_report.html', fingerprint: true
             }
         }
-
-
-       
 
            stage('Démarrer l\'application avec Docker Compose') {
             steps {
