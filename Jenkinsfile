@@ -120,11 +120,7 @@ pipeline {
             }
         }
 
-           stage('Démarrer l\'application avec Docker Compose') {
-            steps {
-                sh 'docker-compose up -d'
-            }
-        }
+
          stage('Scan de sécurité - Trivy') {
             steps {
                 sh "docker run --rm ${TRIVY_IMAGE} image ${DOCKER_IMAGE_NAME}:latest"
