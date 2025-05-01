@@ -87,10 +87,9 @@ pipeline {
 
                                     
                    
-                } 
-
+                  } 
                }
-	    }   
+            }         
   
 }
            stage('Deploy our image') { 
@@ -103,12 +102,12 @@ pipeline {
 
                                     
                    
-                } 
+                 } 
 
                }
-	    }   
+	       }   
   
-}
+        }
 
         stage('Run OWASP ZAP Scan') {
             steps {
