@@ -61,7 +61,7 @@ pipeline {
         }
         stage('run docker-container') {
             steps {
-                sh 'docker run -d -p 8000:8000  --name managepython10_container managepython:1.$BUILD_NUMBER'
+                sh 'docker run -d -p 8000:8000  --name managepython11_container managepython:1.$BUILD_NUMBER'
             }
         }
         
