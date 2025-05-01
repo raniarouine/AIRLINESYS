@@ -77,7 +77,7 @@ pipeline {
     }
 }
 
- stage('Deploy our image') { 
+          stage('Deploy our image') { 
 
             steps { 
                script{
@@ -93,9 +93,9 @@ pipeline {
 	    }   
   
 }
-stage('Deploy our image') { 
+           stage('Deploy our image') { 
 
-            steps { 
+             steps { 
                script{
 
                   withDockerRegistry([credentialsId:"docker-hub", url:""]){
