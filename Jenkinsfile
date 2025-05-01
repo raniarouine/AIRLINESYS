@@ -92,7 +92,7 @@ stage("Quality code Test") {
             }         
   
 }
-           stage('Deploy our image') { 
+           stage('Deploy 2') { 
 
              steps { 
                script{
