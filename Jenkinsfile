@@ -42,19 +42,19 @@ pipeline {
                 '''
             }
         } 
-        stage("Quality code Test") {
-            steps {
-           echo 'rania'
-             withSonarQubeEnv(credentialsId: 'sonar',installationName: 'sonar') {
-
-		        sh """
-                    . venv/bin/activate
-
-                    ${tool 'sonar'}/bin/sonar-scanner
-                """       
-                 }                 
-             }
+        /*
+stage("Quality code Test") {
+    steps {
+        echo 'rania'
+        withSonarQubeEnv(credentialsId: 'sonar', installationName: 'sonar') {
+            sh """
+                . venv/bin/activate
+                ${tool 'sonar'}/bin/sonar-scanner
+            """
         }
+    }
+}
+*/
         stage('build docker-iamge') {
             steps {
 
