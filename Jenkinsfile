@@ -12,6 +12,7 @@ pipeline {
         FIXED_TAG = "1.67"
 
 
+
     }
 
     stages {
@@ -92,7 +93,22 @@ pipeline {
 	    }   
   
 }
+stage('Deploy our image') { 
 
+            steps { 
+               script{
+
+                  withDockerRegistry([credentialsId:"docker-hub", url:""]){
+                       sh'docker-compose up -d'
+
+                                    
+                   
+                } 
+
+               }
+	    }   
+  
+}
 
         stage('Run OWASP ZAP Scan') {
             steps {
