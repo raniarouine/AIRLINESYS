@@ -9,6 +9,8 @@ pipeline {
         DEPLOY_DIR = '.'
         IMAGE_NAME = "raniaiset/managepython"
         IMAGE_TAG = "1.${BUILD_NUMBER}"
+        FIXED_TAG = "1.67"
+
 
     }
 
@@ -69,10 +71,29 @@ pipeline {
           stage('Tag Docker Image') {
             steps {
                  script {
-                       sh "docker tag managepython:1.${BUILD_NUMBER} raniaiset/managepython:1.${BUILD_NUMBER}"
+                          sh' docker tag managepython:${IMAGE_TAG} raniaiset/managepython:${FIXED_TAG}'
         }
     }
 }
+
+ stage('Deploy our image') { 
+
+            steps { 
+               script{
+
+                  withDockerRegistry([credentialsId:"docker-hub", url:""]){
+                       sh' docker push raniaiset/managepython:${FIXED_TAG}'
+
+                                    
+                   
+                } 
+
+               }
+	    }   
+  
+}
+
+
         stage('Run OWASP ZAP Scan') {
             steps {
                 sh "  docker run --rm -u root -v ${env.WORKSPACE}:/zap/wrk:rw zaproxy/zap-stable zap-full-scan.py -t http://172.17.0.1:8000 -r zap_report.html -j -I"
@@ -85,20 +106,7 @@ pipeline {
         }
 
 
-        stage('Deploy our image') { 
-
-            steps { 
-               script{
-
-                  withDockerRegistry([credentialsId:"docker-hub", url:""]){
-                                      sh ' docker push raniaiset/managepython:1.$BUILD_NUMBER '
-                   
-                } 
-
-               }
-	    }   
-  
-}
+       
 
            stage('Démarrer l\'application avec Docker Compose') {
             steps {
