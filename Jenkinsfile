@@ -61,35 +61,16 @@ stage("Quality code Test") {
                  sh 'docker build -t managepython:1.$BUILD_NUMBER .'
             }
         }
-        stage('run docker-container') {
-            steps {
-                sh 'docker run -d -p 8000:8000  --name managepython11_container managepython:1.$BUILD_NUMBER'
+        stage('Push to Nexus') {
+    steps {
+        script {
+            docker.withRegistry('http://localhost:5000', 'nexus-docker') {
+                dockerImage.tag("localhost:5000/managepython:${BUILD_NUMBER}")
+                def nexusImage = docker.image("localhost:5000/managepython:${BUILD_NUMBER}")
+                nexusImage.push()
             }
         }
-        
-
-          stage('Tag Docker Image') {
-            steps {
-                 script {
-                          sh' docker tag managepython:${IMAGE_TAG} raniaiset/managepython:${FIXED_TAG}'
-        }
     }
-}
-
-          stage('Deploy our image') { 
-
-            steps { 
-               script{
-
-                  withDockerRegistry([credentialsId:"docker-hub", url:""]){
-                       sh' docker push raniaiset/managepython:${FIXED_TAG}'
-
-                                    
-                   
-                  } 
-               }
-            }         
-  
 }
            stage('Deploy 2') { 
 
