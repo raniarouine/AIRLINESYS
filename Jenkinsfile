@@ -58,8 +58,10 @@ stage("Quality code Test") {
         stage('build docker-iamge') {
             steps {
 
-                sh 'docker build -t managepython:1.$BUILD_NUMBER .'
-          
+                sh '''
+            docker build -t ${IMAGE_NAME}:${IMAGE_TAG} .
+            docker tag ${IMAGE_NAME}:${IMAGE_TAG} ${DOCKER_IMAGE_NAME}:latest
+                '''
             }
         }
         stage('run docker-container') {
