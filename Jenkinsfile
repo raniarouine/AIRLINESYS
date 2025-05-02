@@ -122,9 +122,17 @@ stage("Quality code Test") {
 
          stage('Scan de sécurité - Trivy') {
             steps {
-                sh "docker run --rm ${TRIVY_IMAGE} image ${DOCKER_IMAGE_NAME}:latest"
-            }
+               sh '''
+                 docker tag managepython:1.$BUILD_NUMBER ${IMAGE_NAME}:${IMAGE_TAG} || true
+
+                  docker run --rm \
+                 -v /var/run/docker.sock:/var/run/docker.sock \
+                 -v $HOME/.cache:/root/.cache/ \
+                 ${TRIVY_IMAGE} image ${IMAGE_NAME}:${IMAGE_TAG}
+                 '''
+          }
         }
+
            stage('Scan de sécurité - Nikto') {
             steps {
                 // Attendre quelques secondes que le conteneur soit prêt
