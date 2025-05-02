@@ -42,7 +42,7 @@ pipeline {
                 '''
             }
         } 
-        /*
+        
 stage("Quality code Test") {
     steps {
         echo 'rania'
@@ -54,7 +54,7 @@ stage("Quality code Test") {
         }
     }
 }
-*/
+
         stage('build docker-iamge') {
             steps {
 
