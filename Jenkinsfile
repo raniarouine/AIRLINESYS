@@ -8,10 +8,13 @@ pipeline {
         DOCKER_IMAGE_NAME = 'app-django'
         DEPLOY_DIR = '.'
         IMAGE_NAME = "raniaiset/managepython"
+        NEXUS_REGISTRY = "localhost:5000"
         IMAGE_TAG = "1.${BUILD_NUMBER}"
         FIXED_TAG = "1.67"
 
-
+         // Nexus Docker Registry URL et les credentials
+        NEXUS_URL = 'http://localhost:5000'
+        NEXUS_CREDENTIALS = 'nexus-docker'  // L'ID des credentials dans Jenkins
 
     }
 
@@ -43,9 +46,9 @@ pipeline {
             }
         } 
         
-stage("Quality code Test") {
-    steps {
-        echo 'rania'
+        stage("Quality code Test") {
+             steps {
+              echo 'rania'
         withSonarQubeEnv(credentialsId: 'sonar', installationName: 'sonar') {
             sh """
                 . venv/bin/activate
@@ -61,17 +64,20 @@ stage("Quality code Test") {
                  sh 'docker build -t managepython:1.$BUILD_NUMBER .'
             }
         }
-        stage('Push to Nexus') {
-    steps {
-        script {
-            docker.withRegistry('http://localhost:5000', 'nexus-docker') {
-                dockerImage.tag("localhost:5000/managepython:${BUILD_NUMBER}")
-                def nexusImage = docker.image("localhost:5000/managepython:${BUILD_NUMBER}")
-                nexusImage.push()
+
+       stage('Push to Nexus') {
+            steps {
+                script {
+                    docker.withRegistry("http://${NEXUS_REGISTRY}", 'nexus-docker') {
+                        dockerImage.tag("${NEXUS_REGISTRY}/${DOCKER_IMAGE_NAME}:${IMAGE_TAG}")
+                        def nexusImage = docker.image("${NEXUS_REGISTRY}/${DOCKER_IMAGE_NAME}:${IMAGE_TAG}")
+                        nexusImage.push()
+                    }
+                }
             }
         }
-    }
-}
+    
+
            stage('Deploy 2') { 
 
              steps { 
