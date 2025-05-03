@@ -21,6 +21,16 @@ pipeline {
             }
         }
 
+        
+        stage('Vérifier Python 3') {
+            steps {
+                sh '''
+                    which python3  // Vérifie où python3 est installé
+                    python3 --version  // Vérifie la version de python3
+                '''
+            }
+        }
+
         stage('Préparer l\'environnement Python') {
             steps {
                 sh '''
