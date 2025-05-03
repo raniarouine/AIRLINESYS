@@ -5,15 +5,16 @@ pipeline {
         VIRTUAL_ENV = "${WORKSPACE}/venv"
         TRIVY_IMAGE = 'aquasec/trivy:latest'
         NIKTO_IMAGE = 'frapsoft/nikto:latest'
+        DOCKER_REGISTRY = "localhost:5002"
+        DOCKER_REPO = "docker-hosted"
         DOCKER_IMAGE_NAME = 'app-django'
         DEPLOY_DIR = '.'
         IMAGE_NAME = "raniaiset/managepython"
-        NEXUS_REGISTRY = "localhost:5000"
         IMAGE_TAG = "1.${BUILD_NUMBER}"
         FIXED_TAG = "1.67"
 
          // Nexus Docker Registry URL et les credentials
-        NEXUS_URL = 'http://localhost:5000'
+        NEXUS_URL = 'http://localhost:5002'
         NEXUS_CREDENTIALS = 'nexus-docker'  // L'ID des credentials dans Jenkins
 
     }
@@ -68,18 +69,18 @@ pipeline {
             }
         }
 
-   stage('Push to Nexus') {
-        steps {
-            script {
-            docker.withRegistry('http://localhost:5000', 'nexus-docker') {
-                def dockerImage = docker.image("managepython:${BUILD_NUMBER}")
-                dockerImage.tag("localhost:5000/managepython:${BUILD_NUMBER}")
-                dockerImage.push()
+        stage('Push Docker Image to Nexus') {
+            steps {
+                script {
+                    // Connexion au registre Docker Nexus et push de l'image
+                    docker.withRegistry("http://${DOCKER_REGISTRY}", "nexus-creds") {
+                        docker.image("${DOCKER_REGISTRY}/${DOCKER_REPO}/${DOCKER_IMAGE_NAME}:${IMAGE_TAG}").push()
+                    }
+                }
             }
         }
     }
 }
-
 
     
 
