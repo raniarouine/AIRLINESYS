@@ -12,7 +12,7 @@ pipeline {
         IMAGE_NAME = "raniaiset/managepython"
         IMAGE_TAG = "1.${BUILD_NUMBER}"
         FIXED_TAG = "1.67"
-
+  
          // Nexus Docker Registry URL et les credentials
         NEXUS_URL = 'http://localhost:5002'
         NEXUS_CREDENTIALS = 'nexus-docker'  // L'ID des credentials dans Jenkins
@@ -69,16 +69,36 @@ pipeline {
             }
         }
 
-        stage('Push Docker Image to Nexus') {
+         stage('run docker-container') {
             steps {
-                script {
-                    // Connexion au registre Docker Nexus et push de l'image
-                    docker.withRegistry("http://${DOCKER_REGISTRY}", "nexus-creds") {
-                        docker.image("${DOCKER_REGISTRY}/${DOCKER_REPO}/${DOCKER_IMAGE_NAME}:${IMAGE_TAG}").push()
-                    }
-                }
+                sh 'docker run -d -p 8000:8000  --name managepython11_container managepython:1.$BUILD_NUMBER'
             }
         }
+        
+
+          stage('Tag Docker Image') {
+            steps {
+                 script {
+                          sh' docker tag managepython:${IMAGE_TAG} raniaiset/managepython:${FIXED_TAG}'
+        }
+    }
+}
+
+          stage('Deploy our image') { 
+
+            steps { 
+               script{
+
+                  withDockerRegistry([credentialsId:"docker-hub", url:""]){
+                       sh' docker push raniaiset/managepython:${FIXED_TAG}'
+
+                                    
+                   
+                  } 
+               }
+            }         
+  
+}
 
 
     
