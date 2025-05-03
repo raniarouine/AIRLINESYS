@@ -45,7 +45,8 @@ pipeline {
                 '''
             }
         } 
-        
+        /* 
+
         stage("Quality code Test") {
              steps {
               echo 'rania'
@@ -57,6 +58,8 @@ pipeline {
         }
     }
 }
+*/
+
 
         stage('build docker-iamge') {
             steps {
@@ -65,17 +68,21 @@ pipeline {
             }
         }
 
-       stage('Push to Nexus') {
-            steps {
-                script {
-                    docker.withRegistry("http://${NEXUS_REGISTRY}", 'nexus-docker') {
-                        dockerImage.tag("${NEXUS_REGISTRY}/${DOCKER_IMAGE_NAME}:${IMAGE_TAG}")
-                        def nexusImage = docker.image("${NEXUS_REGISTRY}/${DOCKER_IMAGE_NAME}:${IMAGE_TAG}")
-                        nexusImage.push()
-                    }
-                }
+      stage('Push to Nexus') {
+    steps {
+        script {
+            // Connexion au registre Docker de Nexus avec les informations d'identification
+            docker.withRegistry('http://localhost:5000', 'nexus-docker') {
+                // Construire et taguer l'image Docker
+                def dockerImage = docker.image("managepython:${BUILD_NUMBER}")
+                dockerImage.tag("localhost:5000/repository/docker-hosted/managepython:${BUILD_NUMBER}")
+                
+                // Pousser l'image Docker vers Nexus
+                dockerImage.push()
             }
         }
+    }
+}
     
 
            stage('Deploy 2') { 
