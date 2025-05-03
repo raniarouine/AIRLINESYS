@@ -5,18 +5,13 @@ pipeline {
         VIRTUAL_ENV = "${WORKSPACE}/venv"
         TRIVY_IMAGE = 'aquasec/trivy:latest'
         NIKTO_IMAGE = 'frapsoft/nikto:latest'
-        DOCKER_REGISTRY = "localhost:5002"
-        DOCKER_REPO = "docker-hosted"
         DOCKER_IMAGE_NAME = 'app-django'
         DEPLOY_DIR = '.'
         IMAGE_NAME = "raniaiset/managepython"
         IMAGE_TAG = "1.${BUILD_NUMBER}"
         FIXED_TAG = "1.67"
   
-         // Nexus Docker Registry URL et les credentials
-        NEXUS_URL = 'http://localhost:5002'
-        NEXUS_CREDENTIALS = 'nexus-docker'  // L'ID des credentials dans Jenkins
-
+         
     }
 
     stages {
