@@ -68,21 +68,24 @@ pipeline {
             }
         }
 
-      stage('Push to Nexus') {
+    stage('Push to Nexus') {
     steps {
         script {
-            // Connexion au registre Docker de Nexus avec les informations d'identification
-            docker.withRegistry('http://localhost:5000', 'nexus-docker') {
-                // Construire et taguer l'image Docker
+            // Connexion au Nexus Docker Registry avec l'URL correcte
+            docker.withRegistry('http://localhost:8081/repository/docker-hosted/', 'nexus-docker') {
+                // Créer l'image Docker et lui donner un tag avec BUILD_NUMBER
                 def dockerImage = docker.image("managepython:${BUILD_NUMBER}")
-                dockerImage.tag("localhost:5000/repository/docker-hosted/managepython:${BUILD_NUMBER}")
                 
-                // Pousser l'image Docker vers Nexus
+                // Taguer l'image avec le nom complet pour Nexus
+                dockerImage.tag("localhost:8081/repository/docker-hosted/managepython:${BUILD_NUMBER}")
+                
+                // Pousser l'image vers le repository Nexus
                 dockerImage.push()
             }
         }
     }
 }
+
     
 
            stage('Deploy 2') { 
