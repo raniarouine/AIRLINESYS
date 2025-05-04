@@ -2,8 +2,17 @@
 """Django's command-line utility for administrative tasks."""
 import os
 import sys
+from prometheus_client import start_http_server, Counter, Histogram
+import time
+import random
 
+REQUEST_COUNT = Counter('app_requests_total', 'Total number of requests')
+REQUEST_LATENCY = Histogram('app_request_latency_seconds', 'Request latency')
 
+def process_request():
+    REQUEST_COUNT.inc()
+    with REQUEST_LATENCY.time():
+        time.sleep(random.uniform(0.1, 0.9))
 def main():
     """Run administrative tasks."""
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'django_arms.settings')
@@ -19,4 +28,8 @@ def main():
 
 
 if __name__ == '__main__':
+   start_http_server(8000)
+     print("Metrics server started at http://0.0.0.0:8000/metrics")
+    while True:
+        process_request()
     main()
