@@ -81,6 +81,7 @@ pipeline {
         }
     }
 }
+         /*
 
           stage('Deploy our image') { 
 
@@ -117,7 +118,7 @@ pipeline {
 	       }   
   
         }
-
+*/
         stage('Run OWASP ZAP Scan') {
             steps {
                 sh "  docker run --rm -u root -v ${env.WORKSPACE}:/zap/wrk:rw zaproxy/zap-stable zap-full-scan.py -t http://172.17.0.1:8000 -r zap_report.html -j -I"
