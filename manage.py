@@ -3,16 +3,24 @@
 import os
 import sys
 from prometheus_client import start_http_server, Counter, Histogram
+import threading
 import time
 import random
 
+# Prometheus metrics
 REQUEST_COUNT = Counter('app_requests_total', 'Total number of requests')
 REQUEST_LATENCY = Histogram('app_request_latency_seconds', 'Request latency')
 
-def process_request():
-    REQUEST_COUNT.inc()
-    with REQUEST_LATENCY.time():
-        time.sleep(random.uniform(0.1, 0.9))
+def process_metrics():
+    """Background thread to simulate and expose Prometheus metrics."""
+    start_http_server(8000)  # Expose metrics on http://localhost:8000/metrics
+    print("Prometheus metrics server started on port 8000")
+
+    while True:
+        REQUEST_COUNT.inc()
+        with REQUEST_LATENCY.time():
+            time.sleep(random.uniform(0.1, 0.9))
+
 def main():
     """Run administrative tasks."""
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'django_arms.settings')
@@ -26,9 +34,9 @@ def main():
         ) from exc
     execute_from_command_line(sys.argv)
 
+if _name_ == '_main_':
+    # Start Prometheus metrics in a background thread
+    threading.Thread(target=process_metrics, daemon=True).start()
 
-if __name__ == '__main__':
-   start_http_server(8000) 
-   while True:
-       process_request()
-   main()
+    # Run Django
+    main()
