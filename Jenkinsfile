@@ -22,14 +22,7 @@ pipeline {
         }
 
         
-        stage('Vérifier Python 3') {
-            steps {
-                sh '''
-                    which python3  // Vérifie où python3 est installé
-                    python3 --version  // Vérifie la version de python3
-                '''
-            }
-        }
+    
 
         stage('Préparer l\'environnement Python') {
             steps {
@@ -137,17 +130,16 @@ pipeline {
         }
 
 
-         stage('Scan de sécurité - Trivy') {
+        stage('trivy Scan') {
             steps {
-               sh '''
-                 docker tag managepython:1.$BUILD_NUMBER ${IMAGE_NAME}:${IMAGE_TAG} || true
-
-                  docker run --rm \
-                 -v /var/run/docker.sock:/var/run/docker.sock \
-                 -v $HOME/.cache:/root/.cache/ \
-                 ${TRIVY_IMAGE} image ${IMAGE_NAME}:${IMAGE_TAG}
-                 '''
-          }
+                script {
+			if (!fileExists("${WORKSPACE}/html.tpl")) {
+				sh"wget -O ${WORKSPACE}/html.tpl https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/html.tpl"
+			}
+			sh "docker run -v /var/run/docker.sock:/var/run/docker.sock -v ${WORKSPACE}/trivy:/trivy -v ${WORKSPACE}/html.tpl:/html.tpl aquasec/trivy image managepython:1.$BUILD_NUMBER . --severity MEDIUM,HIGH,CRITICAL --format template --template @/html.tpl -o /trivy/report.html --timeout 25m"
+		
+                }
+            }
         }
 
            stage('Scan de sécurité - Nikto') {
