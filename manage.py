@@ -34,7 +34,7 @@ def main():
         ) from exc
     execute_from_command_line(sys.argv)
 
-if _name_ == '_main_':
+if __name__ == '__main__':
     # Start Prometheus metrics in a background thread
     threading.Thread(target=process_metrics, daemon=True).start()
 
