@@ -31,5 +31,5 @@ if __name__ == '__main__':
    start_http_server(8000)
      print("Metrics server started at http://0.0.0.0:8000/metrics")
     while True:
-        process_request()
+   process_request()
     main()
