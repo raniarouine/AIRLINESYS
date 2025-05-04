@@ -30,5 +30,5 @@ def main():
 if __name__ == '__main__':
    start_http_server(8000) 
    while True:
-   process_request()
+       process_request()
    main()
