@@ -3,10 +3,17 @@ from django.urls import path,include
 from . import views
 from django.contrib.auth import views as auth_views
 from django.views.generic.base import RedirectView
-
 from django.conf import settings
 from django.conf.urls.static import static
 
+from prometheus_client import generate_latest
+from django.http import HttpResponse
+
+
+def metrics_view(request):
+    return HttpResponse(generate_latest(), content_type='text/plain')
+
+    
 urlpatterns = [
     path('',views.search_flight, name='public-page'),
     path('search_result',views.search_result, name="search-result"),
@@ -43,4 +50,5 @@ urlpatterns = [
     path('view_reservation/<int:pk>',views.view_reservation,name='view-reservation-pk'),
     path('delete_reservation/<int:pk>',views.delete_reservation,name='delete-reservation-pk'),
     path('update_reservation',views.update_reservation,name='update-reservation'),
+    path('metrics/', metrics_view),
 ]+ static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)
