@@ -34,9 +34,7 @@ def main():
         ) from exc
     execute_from_command_line(sys.argv)
 
-if __name__ == '__main__':
-    # Start Prometheus metrics in a background thread
-    threading.Thread(target=process_metrics, daemon=True).start()
 
-    # Run Django
+if __name__ == '__main__':
+    threading.Thread(target=process_metrics, daemon=True).start()
     main()
