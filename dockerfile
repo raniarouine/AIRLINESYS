@@ -13,4 +13,4 @@ RUN pip install --no-cache-dir -r requirements.txt
 EXPOSE 8000
 
 # 7. Commande de lancement
-CMD ["python3", "manage.py", "runserver" ]
+CMD ["python3", "manage.py", "runserver" ,"172.17.0.1:8000"]
