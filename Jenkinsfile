@@ -18,7 +18,7 @@ pipeline {
         stage('Cloner le dépôt') {
             steps {
                 cleanWs()
-                git branch: 'main', url: 'https://github.com/raniarouine/AIRLINESYS.git'
+                git branch: 'main', url: 'https://github.com/HelmyAch/Tunisair.git'
             }
         }
 
