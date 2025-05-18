@@ -9,7 +9,7 @@ pipeline {
         DEPLOY_DIR = '.'
         IMAGE_NAME = "raniaiset/managepython"
         IMAGE_TAG = "1.${BUILD_NUMBER}"
-        FIXED_TAG = "1.67"
+        
   
          
     }
@@ -78,7 +78,7 @@ pipeline {
           stage('Tag Docker Image') {
             steps {
                  script {
-                          sh' docker tag managepython:${IMAGE_TAG} raniaiset/managepython:${FIXED_TAG}'
+                          sh' docker tag managepython:${IMAGE_TAG} raniaiset/managepython:${IMAGE_TAG}'
         }
     }
 }
@@ -90,7 +90,7 @@ pipeline {
                script{
 
                   withDockerRegistry([credentialsId:"docker-hub", url:""]){
-                       sh' docker push raniaiset/managepython:${FIXED_TAG}'
+                       sh' docker push raniaiset/managepython:${IMAGE_TAG}'
 
                                     
                    
