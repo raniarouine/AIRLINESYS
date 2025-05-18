@@ -14,7 +14,7 @@ from pathlib import Path
 import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '172.17.0.1', 'docker0']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '172.17.0.1', 'docker0','0.0.0.0']
 
 
 # Quick-start development settings - unsuitable for production
