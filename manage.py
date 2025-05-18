@@ -6,6 +6,7 @@ from prometheus_client import start_http_server, Counter, Histogram
 import threading
 import time
 import random
+import socket
 
 # Prometheus metrics
 REQUEST_COUNT = Counter('app_requests_total', 'Total number of requests')
@@ -20,7 +21,24 @@ def process_metrics():
         REQUEST_COUNT.inc()
         with REQUEST_LATENCY.time():
             time.sleep(random.uniform(0.1, 0.9))
+def start_server():
+    # Create TCP socket
+    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
+    # Allow reuse of address
+    sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+
+    # Bind to address and port
+    sock.bind(('0.0.0.0', 8000))
+    sock.listen(5)
+
+    print("Server started on port 8080...")
+
+    while True:
+        conn, addr = sock.accept()
+        print(f"Connection from {addr}")
+        conn.sendall(b"Hello from server!")
+        conn.close()
 def main():
     """Run administrative tasks."""
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'django_arms.settings')
