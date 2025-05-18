@@ -11,6 +11,7 @@ COPY . .
 RUN pip install --no-cache-dir -r requirements.txt
 # 6. Exposer le port utilisé par Django
 EXPOSE 8000
+EXPOSE 8001
 
 # 7. Commande de lancement
 CMD ["python3", "manage.py", "runserver" ,"127.0.0.1:8000"]
