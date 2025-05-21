@@ -138,12 +138,13 @@ pipeline {
         }
              stage('deploy application ') {
             steps {
-                
+
             sh 'docker-compose up -d'
 
             }
 
-        }        stage('Fin') {
+        }
+                stage('Fin') {
             steps {
                 echo ' Pipeline terminé avec succès !'
             }
