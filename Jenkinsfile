@@ -67,12 +67,13 @@ pipeline {
                  sh 'docker build -t managepython:1.$BUILD_NUMBER .'
             }
         }
-
-         stage('run docker-container') {
+        
+        stage('run docker-container') {
             steps {
-                sh 'docker-compose up -d'
+                sh 'docker run -d -p 8000:8000  --name managepython11_container managepython:1.$BUILD_NUMBER'
             }
         }
+        
         
 
           stage('Tag Docker Image') {
