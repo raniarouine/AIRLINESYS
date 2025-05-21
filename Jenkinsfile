@@ -70,7 +70,7 @@ pipeline {
 
          stage('run docker-container') {
             steps {
-                sh 'docker run -d -p 8000:8000  --name managepython11_container managepython:1.$BUILD_NUMBER'
+                sh 'docker-compose up -d'
             }
         }
         
@@ -105,10 +105,11 @@ pipeline {
         stage('Run OWASP ZAP Scan') {
             steps {
                 sh "  docker run --rm -u root -v ${env.WORKSPACE}:/zap/wrk:rw zaproxy/zap-stable zap-full-scan.py -t http://172.17.0.1:8000 -r zap_report.html -j -I"
-            }
+            }   
         }
 	   stage('Publish ZAP Report') {
             steps {
+                sh'docker-compose down'
                 archiveArtifacts artifacts: 'zap_report.html', fingerprint: true
             }
         }
