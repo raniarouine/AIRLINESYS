@@ -85,7 +85,7 @@ pipeline {
     }
 }
 
-         stage('Database Migration') {
+        stage('Database Migration') {
             steps {
                 // Utilisation de docker-compose avec la variable d'environnement
                 withEnv(["IMAGE_TAG=${IMAGE_TAG}"]) {
