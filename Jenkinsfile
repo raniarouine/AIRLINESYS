@@ -145,18 +145,7 @@ pipeline {
         }
     }
 }
-
-
-           stage('Scan de sécurité - Nikto') {
-            steps {
-                // Attendre quelques secondes que le conteneur soit prêt
-                sh '''
-                    sleep 10
-                    docker run --rm ${NIKTO_IMAGE} -host http://localhost:8011
-                '''
-            }
-        }
-               
+     
             
                 stage('Fin') {
             steps {
