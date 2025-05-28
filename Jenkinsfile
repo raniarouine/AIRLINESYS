@@ -124,16 +124,28 @@ pipeline {
 
 
         stage('trivy Scan') {
-            steps {
-                script {
-			if (!fileExists("${WORKSPACE}/html.tpl")) {
-				sh"wget -O ${WORKSPACE}/html.tpl https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/html.tpl"
-			}
-              sh "docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v ${WORKSPACE}/trivy:/trivy -v ${WORKSPACE}/html.tpl:/html.tpl aquasec/trivy image ${FULL_IMAGE} --severity MEDIUM,HIGH,CRITICAL --format template --template @/html.tpl -o /trivy/report.html --timeout 25m"
-		
-                }
+    steps {
+        script {
+            def FULL_IMAGE = "raniaiset/managepython:1.${BUILD_NUMBER}"
+
+            if (!fileExists("${WORKSPACE}/html.tpl")) {
+                sh "wget -O ${WORKSPACE}/html.tpl https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/html.tpl"
             }
+
+            sh """
+                docker run --rm \
+                -v /var/run/docker.sock:/var/run/docker.sock \
+                -v ${WORKSPACE}/trivy:/trivy \
+                -v ${WORKSPACE}/html.tpl:/html.tpl \
+                aquasec/trivy image ${FULL_IMAGE} \
+                --severity MEDIUM,HIGH,CRITICAL \
+                --format template --template @/html.tpl \
+                -o /trivy/report.html --timeout 25m
+            """
         }
+    }
+}
+
 
            stage('Scan de sécurité - Nikto') {
             steps {
