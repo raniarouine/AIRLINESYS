@@ -3,7 +3,7 @@ version: '3.8'
 services:
   django-app:
         
-    image: raniaiset/managepython:1.67 
+    image: raniaiset/managepython:${IMAGE_TAG}
     container_name: django-app
     command: python manage.py runserver 0.0.0.0:8000
     ports:

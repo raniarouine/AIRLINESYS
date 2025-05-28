@@ -9,6 +9,7 @@ pipeline {
         DEPLOY_DIR = '.'
         IMAGE_NAME = "raniaiset/managepython"
         IMAGE_TAG = "1.${BUILD_NUMBER}"
+        FULL_IMAGE = "${IMAGE_NAME}:${IMAGE_TAG}"
         
   
          
@@ -64,25 +65,35 @@ pipeline {
         stage('build docker-iamge') {
             steps {
 
-                 sh 'docker build -t managepython:1.$BUILD_NUMBER .'
+                 sh 'docker build -t ${FULL_IMAGE} .'
             }
         }
         
         stage('run docker-container') {
             steps {
-                sh 'docker run -d -p 8000:8000  --name managepython11_container managepython:1.$BUILD_NUMBER'
+                sh 'docker run -d -p 8000:8000  --name managepython11_container_${BUILD_NUMBER} ${FULL_IMAGE}'
             }
         }
         
         
 
-          stage('Tag Docker Image') {
+        stage('Tag Docker Image') {
             steps {
                  script {
                           sh' docker tag managepython:${IMAGE_TAG} raniaiset/managepython:${IMAGE_TAG}'
         }
     }
 }
+
+         stage('Database Migration') {
+            steps {
+                // Utilisation de docker-compose avec la variable d'environnement
+                withEnv(["IMAGE_TAG=${IMAGE_TAG}"]) {
+                    sh 'docker-compose run --rm django-app python manage.py migrate'
+                }
+            }
+        }
+
          
 
           stage('Deploy our image') { 
