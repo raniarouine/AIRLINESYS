@@ -3,19 +3,17 @@ version: '3.8'
 services:
   django-app:
         
-    image: raniaiset/managepython:1.67 # Utilisation de l'image app-django:latest
+    image: raniaiset/managepython:1.67 
     container_name: django-app
+    command: python manage.py runserver 0.0.0.0:8000
     ports:
       - "8000:8000"     
     volumes:
       - ./static:/app/static
       - ./media:/app/media
-      - ./data/db.sqlite3:/app/db.sqlite3  # Assurez-vous que le chemin correspond à celui du Dockerfile
+      - ./data/db.sqlite3:/app/db.sqlite3 
+      - .:/app
     environment:
-      - DEBUG=True
-    networks:
-      - app-network
-
-networks:
-  app-network:
-    driver: bridge
+      - DEBUG=1
+      - SECRET_KEY=changeme
+      - DJANGO_ALLOWED_HOSTS=localhost 127.0.0.1 [::1]
