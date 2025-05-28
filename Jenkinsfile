@@ -77,22 +77,18 @@ pipeline {
         
         
 
-        stage('Tag Docker Image') {
-            steps {
-                 script {
-                          sh' docker tag managepython:${IMAGE_TAG} raniaiset/managepython:${IMAGE_TAG}'
+        
+
+        stage('Database Migration') {
+             steps {
+              script {
+                withEnv(["IMAGE_TAG=${IMAGE_TAG}"]) {
+                  sh 'docker-compose -f docker-compose.yml run --rm django-app python manage.py migrate'
+            }
         }
     }
 }
 
-        stage('Database Migration') {
-            steps {
-                // Utilisation de docker-compose avec la variable d'environnement
-                withEnv(["IMAGE_TAG=${IMAGE_TAG}"]) {
-                    sh 'docker-compose run --rm django-app python manage.py migrate'
-                }
-            }
-        }
 
          
 
