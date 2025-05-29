@@ -82,7 +82,7 @@ pipeline {
         stage('Database Migration') {
              steps {
               script {
-                withEnv(["IMAGE_TAG=${IMAGE_TAG}"]) {
+             {
                   sh 'docker-compose -f docker-compose.yml run --rm django-app python manage.py migrate'
             }
         }
