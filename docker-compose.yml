@@ -5,6 +5,7 @@ services:
         
     image: raniaiset/managepython:${IMAGE_TAG}
     container_name: django-app
+    network_mode: bridge
     command: python manage.py runserver 0.0.0.0:8000
     ports:
       - "8000:8000"     
