@@ -14,7 +14,7 @@ REQUEST_LATENCY = Histogram('app_request_latency_seconds', 'Request latency')
 
 def process_metrics():
     """Background thread to simulate and expose Prometheus metrics."""
-    start_http_server(8000)  # Expose metrics on http://localhost:8000/metrics
+    start_http_server(8001)  # Expose metrics on http://localhost:8000/metrics
     print("Prometheus metrics server started on port 8001")
 
     while True:
