@@ -10,8 +10,5 @@ services:
       - "8000:8000"     
     volumes:
       - .:/app
-    environment:
-      - DEBUG=1
-      - SECRET_KEY=changeme
-      - DJANGO_ALLOWED_HOSTS=127.0.0.1  172.17.0.1 [::1]
+    
   

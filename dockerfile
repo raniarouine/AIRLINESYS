@@ -12,14 +12,11 @@ RUN apt-get update && apt-get install -y \
 WORKDIR /app
 
 
-# Copier les fichiers de dépendances en premier (caching)
-COPY requirements.txt .
-
-
 # 5. Copier les fichiers de ton projet
-RUN pip install --no-cache-dir -r requirements.txt
+
 COPY . . 
-# 6. Exposer le port utilisé par Django
+
+RUN pip install --no-cache-dir -r requirements.txt
 EXPOSE 8000
 
 # 7. Commande de lancement
