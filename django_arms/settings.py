@@ -16,6 +16,7 @@ import os
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
@@ -24,8 +25,9 @@ SECRET_KEY = 'django-insecure-j7xv%)66l8u0^8sxnj7()z$zll8&a2*_h2r84yeo9f2fidx8^7
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'django-app','172.25.0.2']
+
+
 
 
 # Application definition
@@ -40,12 +42,9 @@ INSTALLED_APPS = [
     'django.contrib.humanize',
     'armsApp.apps.armsAppConfig',
     'qr_code',
-    'django_prometheus',
-
 ]
 
 MIDDLEWARE = [
-    'django_prometheus.middleware.PrometheusBeforeMiddleware',  # Gardez une seule instance ici
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -53,15 +52,17 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'django_prometheus.middleware.PrometheusBeforeMiddleware',
- ]
+]
 
 ROOT_URLCONF = 'django_arms.urls'
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        
+
+        'DIRS': [os.path.join(BASE_DIR, 'armsApp', 'templates')],
+    
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -87,7 +88,6 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-
 
 
 # Password validation
