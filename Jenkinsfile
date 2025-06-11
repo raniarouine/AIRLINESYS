@@ -119,7 +119,7 @@ pipeline {
         }
 	   stage('Publish ZAP Report') {
             steps {
-                sh'docker-compose down'
+                sh'docker compose down'
                 archiveArtifacts artifacts: 'zap_report.html', fingerprint: true
             }
         }
