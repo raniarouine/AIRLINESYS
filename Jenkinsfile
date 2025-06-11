@@ -83,7 +83,7 @@ pipeline {
              steps {
               script {
              
-                  sh 'docker-compose -f docker-compose.yml run --rm django-app python manage.py migrate'
+                  sh 'docker compose -f docker-compose.yml run --rm django-app python manage.py migrate'
             }
         }
     }
