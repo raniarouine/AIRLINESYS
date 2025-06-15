@@ -153,7 +153,7 @@ pipeline {
 
 // CD Part 
 
-        stage('Database Migration') {
+        stage('Deploy ') {
              steps {
               script {
              
