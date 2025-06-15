@@ -14,7 +14,7 @@ pipeline {
   
          
     }
-
+// CI Part 
     stages {
         stage('Cloner le dépôt') {
             steps {
@@ -69,11 +69,7 @@ pipeline {
             }
         }
         
-        stage('run docker-container') {
-            steps {
-                sh 'docker run -d -p 8000:8000  --name managepython11_container_${BUILD_NUMBER} ${FULL_IMAGE}'
-            }
-        }
+ 
         
         
 
@@ -92,23 +88,7 @@ pipeline {
 
          
 
-          /*
-          stage('Deploy our image')  {   
 
-            steps { 
-               script{
-
-                  withDockerRegistry([credentialsId:"docker-hub", url:""]){
-                       sh' docker push raniaiset/managepython:${IMAGE_TAG}'
-
-                                    
-                   
-                  } 
-               }
-            }         
-  
-}
-*/
 
 
 
@@ -117,6 +97,7 @@ pipeline {
                 sh "  docker run --rm -u root -v ${env.WORKSPACE}:/zap/wrk:rw zaproxy/zap-stable zap-full-scan.py -t http://172.17.0.1:8000 -r zap_report.html -j -I"
             }   
         }
+
 	   stage('Publish ZAP Report') {
             steps {
                 sh'docker compose down'
@@ -147,7 +128,40 @@ pipeline {
         }
     }
 }
-     
+	   stage('Publish Trivy Report') {
+            steps {
+                
+                archiveArtifacts artifacts: '/trivy/report.html', fingerprint: true
+            }
+        }
+              
+          stage('Deploy our image')  {   
+
+            steps { 
+               script{
+
+                  withDockerRegistry([credentialsId:"docker-hub", url:""]){
+                       sh' docker push raniaiset/managepython:${IMAGE_TAG}'
+
+                                    
+                   
+                  } 
+               }
+            }         
+  
+}
+
+// CD Part 
+
+        stage('Database Migration') {
+             steps {
+              script {
+             
+                  sh 'docker compose -f docker-compose.yml run --rm django-app python manage.py migrate'
+            }
+        }
+    }
+
             
                 stage('Fin') {
             steps {
