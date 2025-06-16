@@ -136,7 +136,7 @@ pipeline {
             }
         }
               
-          stage('Deploy our image')  {   
+          stage('Deploy our image to Dockerhub')  {   
 
             steps { 
                script{
@@ -154,7 +154,7 @@ pipeline {
 
 // CD Part 
 
-        stage('Deploy ') {
+        stage('Deploy Our Application ') {
              steps {
               script {
              
