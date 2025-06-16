@@ -119,21 +119,22 @@ pipeline {
             sh """
                 docker run --rm \
                 -v /var/run/docker.sock:/var/run/docker.sock \
-                -v ${WORKSPACE}:/trivy/report.html \
+                -v ${WORKSPACE}:/trivy/ \
                 -v ${WORKSPACE}/html.tpl:/html.tpl \
                 aquasec/trivy image ${FULL_IMAGE} \
                 --severity MEDIUM,HIGH,CRITICAL \
                 --format template --template @/html.tpl \
-                -o report.html --timeout 25m
+                -o /trivy/report.html --timeout 25m
             """
         }
     }
 }
 	   stage('Publish Trivy Report') {
             steps {
+                dir('/trivy/'){
                 archiveArtifacts artifacts: 'report.html', fingerprint: true
             }
-        }
+        }}
               
           stage('Deploy our image')  {   
 
