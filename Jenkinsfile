@@ -131,8 +131,8 @@ pipeline {
 }
 	   stage('Publish Trivy Report') {
             steps {
-                
-                archiveArtifacts artifacts: '/trivy/report.html', fingerprint: true
+                sh 'cd trivy/'
+                archiveArtifacts artifacts: 'report.html', fingerprint: true
             }
         }
               
