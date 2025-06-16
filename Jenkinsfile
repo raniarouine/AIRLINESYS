@@ -124,7 +124,7 @@ pipeline {
                 aquasec/trivy image ${FULL_IMAGE} \
                 --severity MEDIUM,HIGH,CRITICAL \
                 --format template --template @/html.tpl \
-                -o report.html --timeout 25m
+                -o  ${WORKSPACE}/report.html --timeout 25m
             """
         }
     }
