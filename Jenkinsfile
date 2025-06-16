@@ -119,12 +119,12 @@ pipeline {
             sh """
                 docker run --rm \
                 -v /var/run/docker.sock:/var/run/docker.sock \
-                -v ${WORKSPACE}/trivy:/trivy \
+                -v ${WORKSPACE}:/trivy \
                 -v ${WORKSPACE}/html.tpl:/html.tpl \
                 aquasec/trivy image ${FULL_IMAGE} \
                 --severity MEDIUM,HIGH,CRITICAL \
                 --format template --template @/html.tpl \
-                -o /trivy/report.html --timeout 25m
+                -o report.html --timeout 25m
             """
         }
     }
