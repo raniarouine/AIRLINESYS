@@ -131,10 +131,10 @@ pipeline {
 }
 	   stage('Publish Trivy Report') {
             steps {
-                dir('/trivy/'){
+           
                 archiveArtifacts artifacts: 'report.html', fingerprint: true
             }
-        }}
+        }
               
           stage('Deploy our image')  {   
 
